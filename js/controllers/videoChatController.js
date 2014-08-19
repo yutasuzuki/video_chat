@@ -2,16 +2,13 @@ var app = angular.module('app');
 
 app.controller("videoChatController", function($scope,$routeParams) {
 
-	//var socket = io.connect("http://192.168.108.92:3000");
-	var socket = io.connect("http://localhost:3000");
+	var socket = io.connect("http://10.10.3.232:3000");
+	//var socket = io.connect("http://localhost:3000");
 	var otherArea = document.getElementById("other-area");
-    var recordingText = document.getElementById("recording-text");
     var peer = new Peer({ 
         key: 'lwjd5qra8257b9', 
         config: {'iceServers': [{ url: 'stun:stun.l.google.com:19302'}]}
     });
-    //自分以外のユーザデータを追加する
-    $scope.userData = [];
 
 
 	// 接続
@@ -37,14 +34,15 @@ app.controller("videoChatController", function($scope,$routeParams) {
     });
 
     //途中で誰かが入室した場合IDを受け取り、画面に表示
-    //socket.on('connect', function() {
+    socket.on('connect', function() {
         socket.on("getId",function(id){
+            console.log("broadcast");
             var remoteCall = peer.call(id, window.localStream);
             remoteCall.on('stream', function(stream){
                 otherVideoConnect(stream,id);
             });
         });
-    //});
+    });
 
     function otherVideoConnect(stream,id) {
         var otherVideo = '<li data-id="' + id + '"><video autoplay src="' + URL.createObjectURL(stream) + '"></video></li>';
@@ -65,8 +63,6 @@ app.controller("videoChatController", function($scope,$routeParams) {
     recognition.maxAlternatives = 10;
 
     recognition.onsoundstart = function(){
-        var ele = document.getElementById("view");
-        ele.style.display = "block";
     };
     recognition.onresult = function(event) {
       var length = event.results.length;
