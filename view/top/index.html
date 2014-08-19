@@ -1,0 +1,21 @@
+<form name="form">
+	<h2>Welcome to Video Chat</h2>
+	<div id="input-wrap">
+		<input type="text" id="input" ng-model="username" name="userName" placeholder="Please,enter your name" required>
+	</div>
+	<a ng-href="#/video-chat/{{username}}"
+	ng-class="(form.userName.$valid==true) ? 'active' : 'passive'" 
+	class="btn">Let's play</a>
+</form>
+
+
+
+
+
+
+
+
+
+
+
+

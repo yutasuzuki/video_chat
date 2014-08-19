@@ -1,0 +1,20 @@
+<div id="video-container">
+  <div>
+    <ul id="other-area" class="clearfix">
+    </ul>
+  </div>
+</div>
+
+<ul id="message-area">
+    <li ng-repeat="message in messages | orderBy:'time':true" >
+      <p class="user-name">
+        <span class="talk-name">{{message.name}}</span>
+      </p>
+      <p class="user-text">
+      	<span class="talk-msg">{{message.value}}</span>
+      	<time class="talk-time">{{message.time}}</time>
+      </p>
+    </li>
+</ul>
+<div id="recording-text">{{recordingText}}</div>
+
