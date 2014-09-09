@@ -2,7 +2,7 @@ var app = angular.module('app');
 
 app.controller("videoChatController", function($scope,$routeParams) {
 
-	var socket = io.connect("http://10.10.3.232:3000");
+	var socket = io.connect("http://192.168.50.57:3000");
 	//var socket = io.connect("http://localhost:3000");
 	var otherArea = document.getElementById("other-area");
     var peer = new Peer({ 
@@ -13,16 +13,16 @@ app.controller("videoChatController", function($scope,$routeParams) {
 
 	// 接続
     peer.on('open', function(){
-        window.setTimeout(function(){
-            $scope.peerId = peer.id;
-        	socket.emit("sendId",peer.id);
-        }, 1000);
+        $scope.peerId = peer.id;
+        console.log("自分のidは",peer.id)
+    	socket.emit("sendId",peer.id);
     });
 
     //呼び出し
     peer.on('call', function(call){
-        console.log(call.peer);
-        var id = call.peer;　
+        var id = call.peer;
+        console.log("callが呼ばれたよ:",id);
+        console.log(call.answer(window.localStream));
         call.answer(window.localStream);
         call.on('stream', function(stream){
             otherVideoConnect(stream,id);
@@ -36,7 +36,6 @@ app.controller("videoChatController", function($scope,$routeParams) {
     //途中で誰かが入室した場合IDを受け取り、画面に表示
     socket.on('connect', function() {
         socket.on("getId",function(id){
-            console.log("broadcast");
             var remoteCall = peer.call(id, window.localStream);
             remoteCall.on('stream', function(stream){
                 otherVideoConnect(stream,id);
@@ -44,9 +43,22 @@ app.controller("videoChatController", function($scope,$routeParams) {
         });
     });
 
+    //ng-src 
     function otherVideoConnect(stream,id) {
-        var otherVideo = '<li data-id="' + id + '"><video autoplay src="' + URL.createObjectURL(stream) + '"></video></li>';
-        otherArea.innerHTML += otherVideo;
+        var elems = [];
+        var flg = true;
+        var elems = document.querySelectorAll("[data-id]");
+        if(elems.length != 0){
+            for(var i = 0; i < elems.length; i++){
+                if(elems[i].getAttribute("data-id") == id){
+                    flg = false;
+                }
+            }     
+        }
+        if(flg == true){
+            var otherVideo = '<li data-id="' + id + '"><video autoplay src="' + URL.createObjectURL(stream) + '"></video></li>';
+            otherArea.innerHTML += otherVideo;
+        }
     }
 
     /*
@@ -63,6 +75,8 @@ app.controller("videoChatController", function($scope,$routeParams) {
     recognition.maxAlternatives = 10;
 
     recognition.onsoundstart = function(){
+        console.log($scope.recordingText);
+                $scope.recordingText = "";
     };
     recognition.onresult = function(event) {
       var length = event.results.length;

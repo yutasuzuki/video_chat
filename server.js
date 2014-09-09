@@ -7,7 +7,7 @@ var server = http.createServer(function(req,res){
         var output = fs.readFileSync("./index.html","UTF-8");
         res.end(output);
 //}).listen(3000);
-}).listen(3000,'10.10.3.232');
+}).listen(3000,'192.168.50.57');
 
 var io = socketio.listen(server);
 var arrData = [];
