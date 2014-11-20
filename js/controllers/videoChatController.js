@@ -2,8 +2,8 @@ var app = angular.module('app');
 
 app.controller("videoChatController", function($scope,$routeParams) {
 
-	var socket = io.connect("http://192.168.50.57:3000");
-	//var socket = io.connect("http://localhost:3000");
+	//var socket = io.connect("http://192.168.50.57:3000");
+	var socket = io.connect("http://localhost:3000");
 	var otherArea = document.getElementById("other-area");
     var peer = new Peer({ 
         key: 'lwjd5qra8257b9', 
@@ -31,6 +31,7 @@ app.controller("videoChatController", function($scope,$routeParams) {
 
     //接続失敗
     peer.on('error', function(){
+        console.log("接続に失敗しました");
     });
 
     //途中で誰かが入室した場合IDを受け取り、画面に表示

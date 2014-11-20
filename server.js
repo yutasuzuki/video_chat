@@ -6,8 +6,8 @@ var server = http.createServer(function(req,res){
         res.setHeader("Content-Type","text/html");
         var output = fs.readFileSync("./index.html","UTF-8");
         res.end(output);
-//}).listen(3000);
-}).listen(3000,'192.168.50.57');
+}).listen(3000);
+//}).listen(3000,'192.168.50.57');
 
 var io = socketio.listen(server);
 var arrData = [];
